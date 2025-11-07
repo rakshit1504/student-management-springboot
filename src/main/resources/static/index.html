@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 60%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+        input, button {
+            padding: 6px 10px;
+            margin: 4px;
+        }
+        #add-form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Student Management System</h1>
+
+<button onclick="loadStudents()">🔄 Load Students</button>
+
+<table id="students-table">
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Course</th><th>Action</th></tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<div id="add-form">
+    <h3>Add New Student</h3>
+    <input type="number" id="id" placeholder="ID">
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="course" placeholder="Course">
+    <button onclick="addStudent()">➕ Add</button>
+</div>
+
+<script>
+    const baseURL = '/students';
+
+    async function loadStudents() {
+        const response = await fetch(baseURL);
+        const data = await response.json();
+
+        const tbody = document.querySelector('#students-table tbody');
+        tbody.innerHTML = '';
+
+        data.forEach(student => {
+            const row = `
+                <tr>
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.course}</td>
+                    <td><button onclick="deleteStudent(${student.id})">🗑️ Delete</button></td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    async function addStudent() {
+        const id = document.getElementById('id').value;
+        const name = document.getElementById('name').value;
+        const course = document.getElementById('course').value;
+
+        if (!id || !name || !course) {
+            alert('Please fill all fields!');
+            return;
+        }
+
+        await fetch(baseURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: parseInt(id), name, course })
+        });
+
+        document.getElementById('id').value = '';
+        document.getElementById('name').value = '';
+        document.getElementById('course').value = '';
+        loadStudents();
+    }
+
+    async function deleteStudent(id) {
+        await fetch(`${baseURL}/${id}`, { method: 'DELETE' });
+        loadStudents();
+    }
+
+    loadStudents(); // auto-load on page open
+</script>
+
+</body>
+</html>
