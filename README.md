@@ -34,19 +34,33 @@ The backend uses **Spring MVC**, **Dependency Injection**, and an **in-memory da
 ## Project Structure
 
 student-management-springboot/  
-│  
+
+│
+
 ├── src/main/java/com/example/studentapp/  
+
 │ ├── Student.java  
+
 │ ├── StudentService.java  
+
 │ ├── StudentController.java  
+
 │ └── StudentAppApplication.java  
+
 │  
+
 ├── src/main/resources/  
+
 │ ├── static/  
+
 │ │ └── index.html  
+
 │ └── application.properties  
+
 │  
+
 ├── pom.xml  
+
 └── README.md  
 
 
